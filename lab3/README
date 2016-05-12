@@ -1,0 +1,68 @@
+Piotr Majcher 209937
+06.04.2016
+
+zad. 1
+
+	Pliki mojScan.s oraz mojPrint.s zawierają kod funkcji asemblerowych,
+    wywołujących funkcje scanf i printf z biblioteki <stdio.h>. Moje funkcje
+    nie przyjmują łańcucha formatującego jako argumentu, jest on zamieszczony
+    w korzie funkcji. Obie pobierają zawsze po trzy argumenty, odpowiednio
+    char*,int*,double* dla mojScan oraz. char,int,double dla mojPrint.
+
+    W pliku lab4.c znajduje się kod programu wywołującego wyżej opisane
+    funkcje oraz mierzącego czas ich wykonania. Dla porównania zmierzyłem
+    dodatkowo czas wykonania bilbliotecznej funkcji printf. Nie zrobiłem tego
+    dla scanf, ponieważ i tak czas wykonania funkcji wczytujących zależy od
+    czasu wpisywania danych przez użytkownika. Częstotliwość procesora, potrzebną
+    do obliczenia czasu, zaczerpnąłem z informacji o moim komputerze.
+    Wyliczone czasy są jedynie orientacyjne, ponieważ w dzisiejszych procesorach
+    taktowanie nie zawsze jest jednakowe. Pomimo tego, obliczone wyniki dają
+    zadowalającą dokładność, umożliwiającą zaobserwowanie rzędu wielkości czasów wykonania.
+    Można zauważyć, że mojPrint wykonuje się około 2 razy dłużej niż printf. Jest to
+    dość oczywiste, ponieważ mojPrint wywołuje printf'a, także przekazanie argumentów
+    i wywołanie funkcji musi odbyć się dwa razy.
+
+    Wywołanie funkcji i wygląd ramki stosu (schemat ogólny):
+
+    Przed wywołaniem funkcji, wszystkie jej parametry są zrzucane przez program
+    w odwrotnej kolejności na stos (w wersji 32-bitowej), lub umieszczane w odpowiednich
+    rejestrach(w wersji 64-bitowej - rejestry rdi, rsi, rdx, rxc , ...;
+    xmm0, ... dla liczb zmiennoprzecinkowych).
+
+    Następnie wywoływana jest funkcja (parametrem wywołania jest adres funkcji,
+    która ma się wykonać). Dzieją się wtedy dwie rzeczy, najpierw na stos zrzucany 
+    jest adres następnej instrukcji po wykonaniu funkcji (adres powrotny), a potem 
+    do rejestru %eip (pokazującego kolejne instrukcje do wykonania) ładowany jest adres
+    pierwszej instrukcji w funkcji. W tym momencie zaczyna wykonywać się funkcja.
+    Najpierw musi ona zapisać na  stosie starą  wartość rejestru rbp, który będzie
+    służył do adresowania parametrów oraz zmiennych lokalnych w funkcji. Następnie
+    zapisana do niego zostaje wartość wskaźnika stosu rsp.
+    
+    W kolejnym kroku rezerwowana jest pamięć na zmienne lokalne w funkcji,
+    zależnie od ich ilości. Dzieje się to poprzez odjęcie określonej wartości
+    od wskaźnika stosu, np. jeśli mamy w 64-bitowym programie jeden parametr,to
+    wykonujemy subq $16,%rsp, ponieważ musimy przesunąć wskaźnik o dwa adresy.
+    Gdy funkcja się wykona, zwraca wartość do rax (liczby zmiennoprzecinkowe do xmm0).
+    Na koniec funkcja musi po sobie "posprzątać". Do wskaźnika stosu ładowana jest wartość
+    z rbp, przez co zwalniane są miejsca na stosie, na których były zmienne lokalne. 
+    Potem operacją pop %rbp ładujemy z powrotem do rbp jego starą wartość i usuwamy ją
+    ze szczytu stosu. W tym momencie wskaźnik stosu pokazuje już na adres powrotny i może
+    być wywołane polecenie ret, kończące wykonanie funkcji i zwracające jej wartość.
+
+    Wygląd ramki stosu:
+
+
+        Parametr n-ty (parametry na stosie tylko w wersji 32-bit)
+        ...
+        Parametr 3
+        Parametr 2
+        Parametr 1
+       
+       Adres powrotny (następna instrukcja po wykonaniu funkcji)
+        Stara wartość %ebp <- adres tego miejsca na stosie jest w %ebp
+        Zarazerwowane na zmienne lokalne
+        ...
+        Zarazerwowane na zmienne lokalne
+        Zarazerwowane na zmienne lokalne
+        --------------------------------   <- wskaźnik stosu pokazuje tu
+

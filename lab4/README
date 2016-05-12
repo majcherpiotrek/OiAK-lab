@@ -1,0 +1,35 @@
+Laboratorium nr 4 - Piotr Majcher
+
+Plik calka.s zawiera funkcję liczącą całkę oznaczoną funkcji 1/x, 
+na przedziale od 0.001 do 1000 metodą prostokątów. Parametrami funkcji są
+po kolei: ustawienie trybu zaokrąglania w FPU, ustawienie precyzji w FPU 
+oraz liczba podziałów funkcji. 
+
+Plik fpu_add.s zawiera funkcję dodającą do siebie dwie liczby typu
+double. Pierwsze dwa parametry funkcji są identyczne jak w calka.s,
+natomiast następne dwa to dwie liczby, która funkcja ma dodać. Zwraca
+wartość typu double. 
+
+Plik set_fpu.s zawiera funkcję ustawiającą tryb zaokrąglania oraz
+precyzję w FPU. Wywoływana jest z dwoma parametrami, pierwszy to tryb 
+zaokrąglania (RC - możliwe wartości 0,1,2,3), a drugi to precyzja (PC - możliwe
+wartości 0,1,2). Co oznaczają poszczególne wartości argumentów jest sprecyzowane
+w pliku lab4.c oraz set_fpu.s. Funkcja najpierw inicjuje FPU, później pobiera
+słowo kontrolne i na podstawie argumentów i za pomocą operacji logicznych OR
+i AND na bitach słowa, ustawia dane parametry. Na koniec ładuje słowo z powrotem do FPU.
+
+Plik lab4.c to plik główny programu. Wywołuje on funkcje fpu_add oraz calka
+z różnymi ustawieniami słowa kontrolnego FPU i wypisuje zwrócone przez nie wartości.
+Funkcja całkująca jest również wywoływana dla różnych ilości podziałów.
+Na podstawie tych informacji można zaobserwować jak precyzja oraz tryb zaokrąglania
+wpływają na wynik. Dokładny wynik (zgodny z Wolframem Alpha) został otrzymany
+dla precyzji double oraz double extended, przy wszystkich trybach zaokrąglania oraz
+z największą liczbą podziałów - 10^9. Można zauważyć, że przy ustawieniu lepszej precyzji,
+tryb zaokrąglenia nie miał praktycznie wpływu na wynik. Natomiast przy pojedynczej precyzji
+widać już jego wpływ na wynik - najbliższy dokładnemy został uzyskany przy trybie do najbliższej.
+Ciekawa rzecz w single dzieje się przy trybie zaokrąglania do +niesk i liczbie podziałów 10^9,
+ponieważ wynik wychodzi wtedy zupełnie niepoprawny. Nie potrafię wytłumaczyć tak dużej rozbieżności
+w tym konkretnym wypadku, we wszystkich innych program wykonuje się poprawnie, więc zakładam poprawność
+kodu. Jednak tak duża rozbieżność wynikająca jedynie z trybu zaokrąglania jest również podejrzana.
+Różnice między trybami zaokrąglania dobrze widać na przykładzie funkcji fpu_add, gdzie wynik jest zaokrąglany
+w dół do 123.57299, w górę do 123.57301 lub do najbliższej do 123.57300 (wyniki dla double extended).

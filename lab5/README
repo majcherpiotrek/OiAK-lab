@@ -1,0 +1,31 @@
+LAB5 - roszszerzenia SIMD
+
+Funkcję asemblerową calka.s z poprzedniego laboratorium przerobiłem
+w ten sposób, aby wykonywała obliczenia na SSE (Streaming SIMD Extensions).
+Następnie utworzyłem plik lab5.c, zawierający główny program, który uruchamia
+te różne funkcje całkujące dla pracyzji float i double oraz mierzy ich czas 
+wykonania w cyklach i wypisuje wyniki pomiarów na ekran. 
+
+Opis funkcji całkujących:
+
+    calka.s - funkcja z laboratorium nr 4, wywoływana dla dwóch precyzji,
+    w obu przypadkach z trybem zaokrąglania do najbliższej.
+
+    calkaSSf.s - funkcja liczy całkę przy użyciu SSE na liczbach typu float,
+    nie korzystając z możliwości równoległego prowadzenia obliczeń.
+
+    calkaSSd.s - analogiczna do calkaSSf.s, tylko obliczenia na double.
+
+    calkaSIMD_f.s - funkcja liczy całką przy użyciu SSE na liczbach typu float.
+    Wykorzystuje możliwość równoległego prowadzenia obliczeń, tzn. dla czterech
+    punktów pośrednich wyliczanie wartości funkcji zachodzi równolegle, następnie
+    sumowanie tych wartości oraz przesunięcie punktów pośrednich również. Skraca
+    to czas operacji w przypadku float około czterokrotnie, ponieważ w jednym wektorze
+    w SSE mieszczą się cztery floaty.
+
+    calkaSIMD_d.s - funkcja analogiczna do calkaSIMD_f.s, tylko obliczenia na double.
+    W wektorze SSE mieszczą się dwie liczby typu double, dlatego równoległość obliczeń
+    zachodzi dla dwóch punktów pośrednich na raz, przez co czas operacji zmniejsza się
+    tylko około dwukrotnie.
+
+

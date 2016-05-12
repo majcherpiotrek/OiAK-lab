@@ -1,0 +1,9 @@
+Program pobierający od użytkownika czterocyfrową liczbę 
+w systemi szesnastkowym i zamieniający ją na kod binarny 
+i wypisujący wynik na ekran.
+Algorytm:
+    1. Zamiana kodów ascii każdej cyfry na ich wartości
+        poprzez odejmowanie odpowiednich wartości.
+    2. Zamiana wartości cyfry w kodzie szesnastkowym na
+        kod binarny za pomocą przesunięć binarnych w prawo.
+

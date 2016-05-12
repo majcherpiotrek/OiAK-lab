@@ -1,0 +1,7 @@
+Program wczytuje ciąg znaków z klawiatury.
+Następnie kopiuje jeden znak z tego ciągu do rejestru al.
+W następnych krokach obliczam wartość wprowadzonego znaku:
+ -odejmuję od kodu ascii znaku liczbę 48
+ -sprawdzam, czy wynik jest większy od 9 -> wtedy oznacza to, że to nie cyfra tylko litera A-F. Wykonuję wtedy skok do etykiety _wieksza, w której odejmuję jeszcze 7 od otrzymanej wartosci,. aby uzyskac wartosci szesnastkowych cyfr A-F.
+ - w następnym kroku dzielę wartośc przez dwa, aby uzyskać resztę z dzielenia i zamienić liczbę na system binarny, ale to jeszcze nie działało...
+
